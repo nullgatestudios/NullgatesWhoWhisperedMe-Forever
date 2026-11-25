@@ -3,6 +3,7 @@
 ## Notes: Lists everyone who whispers you while you form a group, with level and class, sorting and filters.
 ## Author: Nullgate Studios
 ## Version: 1.0.0-beta.1
+## X-Curse-Project-ID: 1829641
 ## IconTexture: Interface\Icons\INV_Letter_15
 ## SavedVariables: NullgatesWhoWhisperedMeDB
 ## OptionalDeps: NullgatesAddonConfig-Forever
