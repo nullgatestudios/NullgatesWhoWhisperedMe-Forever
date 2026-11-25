@@ -1,0 +1,13 @@
+# OS and editors
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+__pycache__/
+
+# Build output (the zips folder itself is kept)
+*.zip
+dist/
+zips/*
+!zips/.gitkeep

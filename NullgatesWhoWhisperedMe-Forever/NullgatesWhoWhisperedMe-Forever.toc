@@ -1,0 +1,31 @@
+## Interface: 16001
+## Title: |cff00c0ffNullgate's Who Whispered Me|r - |cffffd100Forever|r
+## Notes: Lists everyone who whispers you while you form a group, with level and class, sorting and filters.
+## Author: Nullgate Studios
+## Version: 1.0.0-beta.1
+## IconTexture: Interface\Icons\INV_Letter_15
+## SavedVariables: NullgatesWhoWhisperedMeDB
+## OptionalDeps: NullgatesAddonConfig-Forever
+## X-License: Restricted - Source Available (All Rights Reserved, No Derivatives)
+## X-Website: https://github.com/nullgatestudios/NullgatesWhoWhisperedMe-Forever
+
+Locale.lua
+Locales\deDE.lua
+Locales\esES.lua
+Locales\frFR.lua
+Locales\itIT.lua
+Locales\ptBR.lua
+Locales\ruRU.lua
+Locales\koKR.lua
+Locales\zhCN.lua
+Locales\zhTW.lua
+Safe.lua
+Data.lua
+Roster.lua
+Sources.lua
+Who.lua
+UI.lua
+Options.lua
+NullgateReport.lua
+Check.lua
+Core.lua

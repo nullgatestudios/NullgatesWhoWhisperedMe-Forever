@@ -1,0 +1,21 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Lua 5.1 (the game's Lua version)
+        run: sudo apt-get update && sudo apt-get install -y lua5.1
+
+      - name: Run the tests
+        run: lua5.1 tests/run.lua && lua5.1 tests/smoke.lua && lua5.1 tests/locales.lua
+
+      - name: Check the addon packages
+        run: python3 .github/scripts/curseforge.py zip dist

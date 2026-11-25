@@ -1,0 +1,5 @@
+<Bindings>
+    <!-- A key press is a hardware event, so this binding may send a /who (the game requires one) -->
+    <Binding name="CLICK NullgatesWhoWhisperedMeLookup:LeftButton" header="NULLGATESWHOWHISPEREDME"/>
+    <Binding name="NULLGATESWHOWHISPEREDME_TOGGLE">NullgatesWhoWhisperedMe_Toggle()</Binding>
+</Bindings>
