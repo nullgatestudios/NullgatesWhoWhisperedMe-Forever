@@ -21,4 +21,5 @@ The first test version. Everything below is built and tested outside the game, b
 
 ### Good to know
 
+- Forever names have a first name and a surname; lookups use the whole name, so "Herald Talenel" isn't confused with another Herald.
 - Players who don't answer a /who (offline, or a typo) are marked **Not found** and tried once more after 5 minutes.

@@ -114,7 +114,7 @@ local function OnWhisper(message, sender, _, _, _, flag, _, _, _, _, _, guid)
     if not ns.IsListening() then return end
     if Safe.Str(flag) == "GM" then return end
     local name = Safe.Name(sender)
-    if not name or name == UnitName("player") then return end
+    if not name or name == Safe.UnitFullName("player") then return end
     ns.AddWhisper(name, Safe.Str(message), guid)
 end
 
@@ -163,6 +163,8 @@ local function OnEvent(_, event, ...)
     elseif event == "WHO_LIST_UPDATE" then
         Who.OnResults(GetTime(), time())
         ns.UI.Refresh()
+    elseif event == "ADDON_ACTION_BLOCKED" then
+        if arg1 == addonName and Who.OnBlocked(GetTime()) then ns.UI.Refresh() end
     elseif event == "CHAT_MSG_SYSTEM" then
         if Who.OnSystemMessage(arg1, GetTime()) then ns.UI.Refresh() end
     elseif event == "LFG_LIST_ACTIVE_ENTRY_UPDATE" then
@@ -188,7 +190,7 @@ local function OnEvent(_, event, ...)
 end
 
 events:SetScript("OnEvent", OnEvent)
-for _, event in ipairs({ "ADDON_LOADED", "PLAYER_LOGIN", "CHAT_MSG_WHISPER", "WHO_LIST_UPDATE", "CHAT_MSG_SYSTEM",
+for _, event in ipairs({ "ADDON_LOADED", "PLAYER_LOGIN", "CHAT_MSG_WHISPER", "WHO_LIST_UPDATE", "CHAT_MSG_SYSTEM", "ADDON_ACTION_BLOCKED",
     "LFG_LIST_ACTIVE_ENTRY_UPDATE", "GUILD_ROSTER_UPDATE", "FRIENDLIST_UPDATE", "GROUP_ROSTER_UPDATE",
     "PLAYER_TARGET_CHANGED", "UPDATE_MOUSEOVER_UNIT", "NAME_PLATE_UNIT_ADDED" }) do
     pcall(events.RegisterEvent, events, event) -- an event this client doesn't have is skipped

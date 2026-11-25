@@ -117,10 +117,21 @@ function Who.OnResults(now, wallNow)
     SetWhoToUi(false)
     local count = Api("GetNumWhoResults")
     local n = (type(count) == "function" and tonumber((count()))) or 0
-    local match
+    -- An exact full name wins. A name without a surname (a client or source that only gave
+    -- the first name) matches a "First Surname" result only when that first name is unique.
+    local want, sep = Roster.Key(Short(entry.name)), Safe.SurnameSeparator()
+    local match, firstOnly, firstCount = nil, nil, 0
     for i = 1, n do
         local info = Result(i)
-        if info and info.name and Roster.Key(Short(info.name)) == Roster.Key(Short(entry.name)) then match = info end
+        local got = info and info.name and Roster.Key(Short(info.name))
+        if got == want then match = info end
+        if got and not want:find(sep, 1, true) then
+            local first = got:match("^(.-)" .. (sep:gsub("%p", "%%%0")))
+            if first == want then firstOnly, firstCount = info, firstCount + 1 end
+        end
+    end
+    if not match and firstCount == 1 then
+        match = firstOnly
     end
     -- Forever's group finder opens its Who tab on this same event, maybe after us: look a frame later.
     if C_Timer and C_Timer.After then C_Timer.After(0, function() ClosePopups(before) end) else ClosePopups(before) end
@@ -163,6 +174,20 @@ function Who.OnSystemMessage(text, now)
     entry.tries = entry.tries - 1
     hideText, hideUntil = text, now + 2
     Who.Log("lookup " .. entry.name .. ": the server asked to wait " .. seconds .. "s (" .. text .. ")")
+    return true
+end
+
+-- ADDON_ACTION_BLOCKED for this addon right after a send: the game refused the /who (it
+-- didn't come from a click), so the player goes straight back in the queue.
+function Who.OnBlocked(now)
+    if not pending or now - pending.at > 2 then return false end
+    local entry = pending.entry
+    pending = nil
+    SetWhoToUi(false)
+    readyAt = now
+    entry.status = "queued"
+    entry.tries = entry.tries - 1
+    Who.Log("lookup " .. entry.name .. ": blocked by the game (it must come from a click or key press)")
     return true
 end
 

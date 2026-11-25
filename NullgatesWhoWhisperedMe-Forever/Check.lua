@@ -69,7 +69,7 @@ end
 
 -- A lookup that isn't on the list: yourself.
 local function SelfEntry()
-    return { name = UnitName("player") or "?", tries = 0, count = 0, status = "queued", test = true, time = time() }
+    return { name = ns.Safe.UnitFullName("player") or "?", tries = 0, count = 0, status = "queued", test = true, time = time() }
 end
 
 local function Button(label, y, onClick)
@@ -115,7 +115,7 @@ local function BuildPanel()
         end)
     end)
     Button("3. Add your target to the list", -90, function()
-        local name = ns.Safe.Name((UnitName("target")))
+        local name = ns.Safe.UnitFullName("target")
         if not (name and UnitIsPlayer("target")) then
             Log("test 3: target a player first")
             return

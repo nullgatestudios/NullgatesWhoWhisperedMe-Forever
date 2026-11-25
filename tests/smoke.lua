@@ -279,6 +279,37 @@ Whisper("hello", "Late", nil)
 RunTimers(clock + 60 * 60)
 OK(Roster.Get("Late") ~= nil, "listening again cancels the pending clear")
 
+-- Forever names: a first name and a surname (UnitName returns them apart; NameUtil joins them).
+NameUtil = { FormatUnitNameForDisplay = function(unit)
+    local u = units[unit]
+    return u and (u.surname and (u.name .. " " .. u.surname) or u.name)
+end }
+units.player.name, units.player.surname = "Herald", "Talenel"
+OK(ns.Safe.UnitFullName("player") == "Herald Talenel", "a unit's full name includes the surname")
+Whisper("self test", "Herald Talenel", nil)
+OK(Roster.Get("Herald Talenel") == nil, "your own whisper is ignored by full name")
+Whisper("lf heals", "Nocturne Nolastname", nil)
+Tick(5)
+lookup.scripts.OnClick(lookup)
+OK(sent[#sent] == 'n-"Nocturne Nolastname"', "a name with a surname is looked up whole")
+whoResults = { { fullName = "Nocturne Other", level = 10 }, { fullName = "Nocturne Nolastname", level = 44, filename = "ROGUE" } }
+Fire("WHO_LIST_UPDATE")
+OK(Roster.Get("Nocturne Nolastname").level == 44, "the exact full name is picked among similar names")
+Whisper("hi", "Kicknazz", nil)
+Tick(5)
+lookup.scripts.OnClick(lookup)
+whoResults = { { fullName = "Kicknazz Takennames", level = 60, filename = "DRUID" }, { fullName = "Someone Else", level = 3 } }
+Fire("WHO_LIST_UPDATE")
+OK(Roster.Get("Kicknazz").level == 60, "a first name alone matches the one result with that first name")
+Whisper("yo", "Blocky", nil)
+Tick(5)
+lookup.scripts.OnClick(lookup)
+Fire("ADDON_ACTION_BLOCKED", folder, "UNKNOWN()")
+OK(Roster.Get("Blocky").status == "queued" and Roster.Get("Blocky").tries == 0 and ns.Who.Ready(clock),
+    "a blocked /who goes straight back in the queue, ready to try again")
+units.player.surname = nil
+units.player.name = "Me"
+
 -- Listing a group in the group finder listens by itself.
 SlashCmdList.NULLGATESWHOWHISPEREDME("listen off")
 local isListed = false

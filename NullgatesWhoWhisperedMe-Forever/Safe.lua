@@ -24,6 +24,24 @@ function Safe.Level(value)
     return value
 end
 
+-- The separator between first name and surname (Forever names have both: "Herald Talenel").
+function Safe.SurnameSeparator()
+    local consts = Constants and Constants.CharacterNameSeparatorConsts
+    return (consts and Safe.Str(consts.CHARACTERNAME_SURNAME_SEPARATOR)) or " "
+end
+
+-- A unit's full name. In Forever UnitName returns the first name and the surname separately;
+-- the game's own NameUtil.FormatUnitNameForDisplay joins them (as chat and /who show them).
+function Safe.UnitFullName(unit)
+    local format = NameUtil and NameUtil.FormatUnitNameForDisplay
+    if type(format) == "function" then
+        local ok, full = pcall(format, unit)
+        if ok and Safe.Str(full) then return Safe.Name(full) end
+    end
+    local ok, name = pcall(UnitName, unit)
+    return ok and Safe.Name(name) or nil
+end
+
 -- A player name without its realm ("Name-Realm" -> "Name" on the player's own realm).
 function Safe.Name(value)
     local name = Safe.Str(value)

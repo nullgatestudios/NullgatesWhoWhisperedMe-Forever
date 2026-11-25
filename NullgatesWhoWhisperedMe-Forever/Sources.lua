@@ -46,7 +46,7 @@ end
 -- What a unit token shows about a player: name and info, or nil.
 local function UnitInfo(unit)
     if not (UnitExists(unit) and UnitIsPlayer(unit)) then return nil end
-    local name = Safe.Name((UnitName(unit)))
+    local name = Safe.UnitFullName(unit)
     if not name then return nil end
     local _, class = UnitClass(unit)
     local info = { level = Safe.Level(UnitLevel(unit)), class = Safe.Str(class) }
@@ -89,8 +89,7 @@ function Sources.InGroup(name)
     local key = Roster.Key(name)
     for _, unit in ipairs(GroupUnits()) do
         if UnitExists(unit) then
-            local ok, unitName = pcall(UnitName, unit)
-            local short = ok and Safe.Name(unitName)
+            local short = Safe.UnitFullName(unit)
             if short and Roster.Key(short) == key then return true end
         end
     end
